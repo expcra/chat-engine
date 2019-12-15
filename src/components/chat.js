@@ -460,6 +460,16 @@ class Chat extends Emitter {
         this.onDisconnected();
     }
 
+    leaveSystem() {
+        const event = this.emit('$.system.leave', { subject: this.objectify() });
+        event.once('$.emitted', () => {
+            this.chatEngine.request('post', 'leave_channel', { chat: this.objectify()})
+                .catch((error) => {
+                    this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
+                })
+        });
+    }
+
     /**
      * Leave from the {@link Chat} on behalf of {@link Me}. Disconnects from the {@link Chat} and will stop
      * receiving events.
@@ -482,12 +492,13 @@ class Chat extends Emitter {
                 this.onLeave();
 
                 // tell the chat we've left
-                this.emit('$.system.leave', { subject: this.objectify() });
+                this.leaveSystem();
 
                 // tell session we've left
                 if (this.chatEngine.me.session) {
                     this.chatEngine.me.session.leave(this);
                 }
+
 
             })
             .catch((error) => {
