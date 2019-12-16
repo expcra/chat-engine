@@ -462,11 +462,13 @@ class Chat extends Emitter {
 
     leaveSystem() {
         const event = this.emit('$.system.leave', { subject: this.objectify() });
-        this.once('$.system.leave', () => {
-            this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
-                .catch((error) => {
-                    this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
-                })
+        event.once('$.emitted', () => {
+            setTimeout(
+                this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
+            .catch((error) => {
+                this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
+            }), 500);
+            
         });
     }
 
