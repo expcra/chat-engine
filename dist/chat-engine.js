@@ -4930,21 +4930,24 @@ var Chat = function (_Emitter) {
             // unsubscribe from the channel locally
             this.chatEngine.pubnub.unsubscribe({
                 channels: [this.channel]
-            });
+            }).then(function () {
 
-            // tell the server we left
-            this.chatEngine.request('post', 'leave', { chat: this.objectify() }).then(function () {
+                // tell the server we left
+                _this7.chatEngine.request('post', 'leave', { chat: _this7.objectify() }).then(function () {
 
-                // trigger the disconnect events and update state
-                _this7.onLeave();
+                    // trigger the disconnect events and update state
+                    _this7.onLeave();
 
-                // tell the chat we've left
-                _this7.leaveSystem();
+                    // tell the chat we've left
+                    _this7.leaveSystem();
 
-                // tell session we've left
-                if (_this7.chatEngine.me.session) {
-                    _this7.chatEngine.me.session.leave(_this7);
-                }
+                    // tell session we've left
+                    if (_this7.chatEngine.me.session) {
+                        _this7.chatEngine.me.session.leave(_this7);
+                    }
+                }).catch(function (error) {
+                    _this7.chatEngine.throwError(_this7, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
+                });
             }).catch(function (error) {
                 _this7.chatEngine.throwError(_this7, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
             });
