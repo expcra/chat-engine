@@ -463,7 +463,7 @@ class Chat extends Emitter {
     leaveSystem() {
         const event = this.emit('$.system.leave', { subject: this.objectify() });
         event.once('$.emitted', () => {
-            this.chatEngine.request('post', 'leave_channel', { chat: this.objectify()})
+            this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
                 .catch((error) => {
                     this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
                 })
@@ -482,33 +482,26 @@ class Chat extends Emitter {
         // unsubscribe from the channel locally
         this.chatEngine.pubnub.unsubscribe({
             channels: [this.channel]
-        }).then(() => {
-        
-          // tell the server we left
-          this.chatEngine.request('post', 'leave', { chat: this.objectify() })
-              .then(() => {
+        });
+        // tell the server we left
+        this.chatEngine.request('post', 'leave', { chat: this.objectify() })
+            .then(() => {
 
-                  // trigger the disconnect events and update state
-                  this.onLeave();
+                // trigger the disconnect events and update state
+                this.onLeave();
 
-                  // tell the chat we've left
-                  this.leaveSystem();
+                // tell the chat we've left
+                this.leaveSystem();
 
-                  // tell session we've left
-                  if (this.chatEngine.me.session) {
-                      this.chatEngine.me.session.leave(this);
-                  }
+                // tell session we've left
+                if (this.chatEngine.me.session) {
+                    this.chatEngine.me.session.leave(this);
+                }
 
             })
             .catch((error) => {
                 this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
             });
-
-        })
-        .catch((error) => {
-           this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
-         });
-
     }
 
     /**
