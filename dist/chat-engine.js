@@ -4910,7 +4910,7 @@ var Chat = function (_Emitter) {
             event.once('$.emitted', function () {
                 setTimeout(_this6.chatEngine.request('post', 'leave_channel', { chat: _this6.objectify() }).catch(function (error) {
                     _this6.chatEngine.throwError(_this6, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
-                }), 2000);
+                }), 3000);
             });
         }
 
