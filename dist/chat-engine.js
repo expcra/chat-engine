@@ -4637,7 +4637,7 @@ var Chat = function (_Emitter) {
         value: function onPresence(presenceEvent) {
 
             // make sure channel matches this channel
-
+            console.log('chatttttttttttttttttttttttttttt', presenceEvent);
             // someone joins channel
             if (presenceEvent.action === 'join') {
                 this.userJoin(presenceEvent.uuid, presenceEvent.state);
@@ -5187,6 +5187,7 @@ var Chat = function (_Emitter) {
             }, function (next) {
 
                 _this11.chatEngine.request('post', 'join', { chat: _this11.objectify() }).then(function () {
+                    console.log('chattttttttttttttttttttttttttttttttt join', _this11.objectify());
                     next();
                 }).catch(next);
             }, function (next) {
