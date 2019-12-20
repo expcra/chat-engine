@@ -4907,9 +4907,12 @@ var Chat = function (_Emitter) {
 
             var event = this.emit('$.system.leave', { subject: this.objectify() });
             event.once('$.emitted', function () {
-                setTimeout(_this6.chatEngine.request('post', 'leave_channel', { chat: _this6.objectify() }).catch(function (error) {
-                    _this6.chatEngine.throwError(_this6, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
-                }), 3000);
+                setTimeout(_this6.leave(),
+                // this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
+                // .catch((error) => {
+                //     this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
+                // }),
+                3000);
             });
         }
 
@@ -7306,7 +7309,7 @@ var Session = function (_Emitter) {
     }, {
         key: 'onJoin',
         value: function onJoin(chat) {
-            console.log('-------------join chat--------------', chat);
+
             // create the chat group if it doesn't exist
             this.chats[chat.group] = this.chats[chat.group] || {};
 
@@ -7318,12 +7321,11 @@ var Session = function (_Emitter) {
 
                 // assign it to the group
                 this.chats[chat.group][chat.channel] = existingChat;
-                console.log('-----existing chat-------', this.chats[chat.group][chat.channel]);
             } else {
 
                 // otherwise, try to recreate it with the server information
                 this.chats[chat.group][chat.channel] = new this.chatEngine.Chat(chat.channel, chat.private, false, chat.meta, chat.group);
-                console.log('-----new chat-------', this.chats[chat.group][chat.channel]);
+
                 /**
                 Fired when another identical instance of {@link ChatEngine} and {@link Me} joins a {@link Chat} that this instance of {@link ChatEngine} is unaware of.
                 Used to synchronize ChatEngine sessions between desktop and mobile, duplicate windows, etc.
