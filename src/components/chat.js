@@ -213,7 +213,6 @@ class Chat extends Emitter {
     onPresence(presenceEvent) {
 
         // make sure channel matches this channel
-        console.log('chatttttttttttttttttttttttttttt', presenceEvent)
         // someone joins channel
         if (presenceEvent.action === 'join') {
             this.userJoin(presenceEvent.uuid, presenceEvent.state);
@@ -736,7 +735,6 @@ class Chat extends Emitter {
 
                 this.chatEngine.request('post', 'join', { chat: this.objectify() })
                     .then(() => {
-                        console.log('chattttttttttttttttttttttttttttttttt join', this.objectify())
                         next();
                     })
                     .catch(next);

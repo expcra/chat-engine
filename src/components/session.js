@@ -133,7 +133,7 @@ class Session extends Emitter {
     @private
     */
     onJoin(chat) {
-
+        console.log('-------------join chat--------------', chat)
         // create the chat group if it doesn't exist
         this.chats[chat.group] = this.chats[chat.group] || {};
 
@@ -142,14 +142,15 @@ class Session extends Emitter {
 
         // if it exists
         if (existingChat) {
-
+            
             // assign it to the group
             this.chats[chat.group][chat.channel] = existingChat;
+            console.log('-----existing chat-------', this.chats[chat.group][chat.channel])
         } else {
-
+            
             // otherwise, try to recreate it with the server information
             this.chats[chat.group][chat.channel] = new this.chatEngine.Chat(chat.channel, chat.private, false, chat.meta, chat.group);
-
+            console.log('-----new chat-------', this.chats[chat.group][chat.channel])
             /**
             Fired when another identical instance of {@link ChatEngine} and {@link Me} joins a {@link Chat} that this instance of {@link ChatEngine} is unaware of.
             Used to synchronize ChatEngine sessions between desktop and mobile, duplicate windows, etc.

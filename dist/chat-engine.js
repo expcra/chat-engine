@@ -4637,7 +4637,6 @@ var Chat = function (_Emitter) {
         value: function onPresence(presenceEvent) {
 
             // make sure channel matches this channel
-            console.log('chatttttttttttttttttttttttttttt', presenceEvent);
             // someone joins channel
             if (presenceEvent.action === 'join') {
                 this.userJoin(presenceEvent.uuid, presenceEvent.state);
@@ -5187,7 +5186,6 @@ var Chat = function (_Emitter) {
             }, function (next) {
 
                 _this11.chatEngine.request('post', 'join', { chat: _this11.objectify() }).then(function () {
-                    console.log('chattttttttttttttttttttttttttttttttt join', _this11.objectify());
                     next();
                 }).catch(next);
             }, function (next) {
@@ -7308,7 +7306,7 @@ var Session = function (_Emitter) {
     }, {
         key: 'onJoin',
         value: function onJoin(chat) {
-
+            console.log('-------------join chat--------------', chat);
             // create the chat group if it doesn't exist
             this.chats[chat.group] = this.chats[chat.group] || {};
 
@@ -7320,11 +7318,12 @@ var Session = function (_Emitter) {
 
                 // assign it to the group
                 this.chats[chat.group][chat.channel] = existingChat;
+                console.log('-----existing chat-------', this.chats[chat.group][chat.channel]);
             } else {
 
                 // otherwise, try to recreate it with the server information
                 this.chats[chat.group][chat.channel] = new this.chatEngine.Chat(chat.channel, chat.private, false, chat.meta, chat.group);
-
+                console.log('-----new chat-------', this.chats[chat.group][chat.channel]);
                 /**
                 Fired when another identical instance of {@link ChatEngine} and {@link Me} joins a {@link Chat} that this instance of {@link ChatEngine} is unaware of.
                 Used to synchronize ChatEngine sessions between desktop and mobile, duplicate windows, etc.
