@@ -462,13 +462,12 @@ class Chat extends Emitter {
     leaveSystem() {
         const event = this.emit('$.system.leave', { subject: this.objectify() });
         event.once('$.emitted', () => {
-            setTimeout(
+            setTimeout( () => {
                 this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
                 .catch((error) => {
                     this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
-                }),
-            3000);
-            
+                })
+            }, 3000);
         });
     }
 
@@ -485,7 +484,7 @@ class Chat extends Emitter {
         this.chatEngine.pubnub.unsubscribe({
             channels: [this.channel]
         });
-        console.log('leave chat event======================================');
+        
         // tell the server we left
         this.chatEngine.request('post', 'leave', { chat: this.objectify() })
             .then(() => {
