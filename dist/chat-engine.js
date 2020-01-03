@@ -4907,9 +4907,11 @@ var Chat = function (_Emitter) {
 
             var event = this.emit('$.system.leave', { subject: this.objectify() });
             event.once('$.emitted', function () {
-                setTimeout(_this6.chatEngine.request('post', 'leave_channel', { chat: _this6.objectify() }).catch(function (error) {
-                    _this6.chatEngine.throwError(_this6, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
-                }), 3000);
+                setTimeout(function () {
+                    _this6.chatEngine.request('post', 'leave_channel', { chat: _this6.objectify() }).catch(function (error) {
+                        _this6.chatEngine.throwError(_this6, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error: error });
+                    });
+                }, 3000);
             });
         }
 
@@ -4930,7 +4932,7 @@ var Chat = function (_Emitter) {
             this.chatEngine.pubnub.unsubscribe({
                 channels: [this.channel]
             });
-            console.log('leave chat event======================================');
+
             // tell the server we left
             this.chatEngine.request('post', 'leave', { chat: this.objectify() }).then(function () {
 
