@@ -213,7 +213,6 @@ class Chat extends Emitter {
     onPresence(presenceEvent) {
 
         // make sure channel matches this channel
-
         // someone joins channel
         if (presenceEvent.action === 'join') {
             this.userJoin(presenceEvent.uuid, presenceEvent.state);
@@ -463,10 +462,12 @@ class Chat extends Emitter {
     leaveSystem() {
         const event = this.emit('$.system.leave', { subject: this.objectify() });
         event.once('$.emitted', () => {
-            this.chatEngine.request('post', 'leave_channel', { chat: this.objectify()})
+            setTimeout( () => {
+                this.chatEngine.request('post', 'leave_channel', { chat: this.objectify() })
                 .catch((error) => {
                     this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
                 })
+            }, 3000);
         });
     }
 
@@ -483,7 +484,7 @@ class Chat extends Emitter {
         this.chatEngine.pubnub.unsubscribe({
             channels: [this.channel]
         });
-
+        
         // tell the server we left
         this.chatEngine.request('post', 'leave', { chat: this.objectify() })
             .then(() => {
@@ -499,12 +500,10 @@ class Chat extends Emitter {
                     this.chatEngine.me.session.leave(this);
                 }
 
-
             })
             .catch((error) => {
                 this.chatEngine.throwError(this, 'trigger', 'chat', new Error('Something went wrong while making a request to chat server.'), { error });
             });
-
     }
 
     /**
